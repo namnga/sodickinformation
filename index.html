@@ -71,7 +71,6 @@
         .day-cell:hover .tooltip { visibility: visible; }
         .day-cell:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
         
-        /* WiFi Card Styles */
         .wifi-card {
             background: #1e293b;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -96,187 +95,261 @@
             pointer-events: none;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
+
+        /* Login screen styles */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .hidden-content {
+            display: none;
+        }
     </style>
 </head>
 <body class="pb-12">
 
-    <div id="toast" class="copy-toast">Đã sao chép!</div>
-
-    <!-- Header -->
-    <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between">
-            <div class="flex items-center gap-4">
-                <h1 class="text-2xl font-black text-[#009639] uppercase tracking-tighter">Sodick Vietnam Information</h1>
+    <!-- Màn hình đăng nhập -->
+    <div id="login-screen">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md border border-slate-100">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-50 rounded-2xl mb-4">
+                    <i class="fas fa-lock sodick-green text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Sodick Vietnam</h2>
+                <p class="text-slate-500 text-sm font-medium">Vui lòng đăng nhập để tiếp tục</p>
             </div>
-            <div id="current-time" class="text-sm font-bold text-[#009639] mt-2 md:mt-0 bg-green-50 px-3 py-1 rounded-full border border-green-100"></div>
-        </div>
-    </header>
-
-    <main class="max-w-6xl mx-auto px-4 mt-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- Left Column -->
-            <div class="space-y-6">
-                <!-- WiFi Section -->
-                <section class="bg-white rounded-2xl shadow-md border-0 p-6 transition-all hover:shadow-lg">
-                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800 uppercase">
-                        <i class="fas fa-wifi sodick-green"></i> WiFi - Tháng <span id="wifi-month-label">1</span>
-                    </h2>
-                    
-                    <div class="space-y-6">
-                        <!-- Hà Nội Office -->
-                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                            <h3 class="text-[10px] font-black text-slate-500 uppercase mb-3 flex items-center justify-between">
-                                <span class="flex items-center gap-2"><i class="fas fa-location-dot text-yellow-500"></i> Hà Nội Office</span>
-                                <span class="tag-hn office-tag">HN</span>
-                            </h3>
-                            <div class="space-y-2">
-                                <div class="wifi-card p-3 rounded-xl border-l-4 border-yellow-400 flex items-center justify-between">
-                                    <div class="flex-1">
-                                        <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Office Room</p>
-                                        <div class="flex items-baseline gap-2">
-                                            <span class="text-[10px] text-slate-300 font-medium">Sodick_HN</span>
-                                            <span id="hn-office-pass" class="text-yellow-400 font-black font-mono text-base tracking-widest">---</span>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1 px-1">Tên đăng nhập</label>
+                    <input type="text" id="username" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#009639] focus:border-transparent transition-all font-medium" placeholder="Nhập username...">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1 px-1">Mật khẩu</label>
+                    <input type="password" id="password" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#009639] focus:border-transparent transition-all font-medium" placeholder="Nhập password...">
+                </div>
+                <div id="login-error" class="text-red-500 text-xs font-bold text-center hidden">Sai tên đăng nhập hoặc mật khẩu!</div>
+                <button onclick="handleLogin()" class="w-full py-4 bg-[#009639] text-white rounded-xl font-black uppercase tracking-widest hover:bg-[#007d2f] shadow-lg shadow-green-200 transition-all active:scale-95">
+                    Đăng nhập
+                </button>
+            </div>
+            <div class="mt-8 text-center">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">© 2026 Sodick Vietnam Ltd.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nội dung chính (Ẩn lúc đầu) -->
+    <div id="main-content" class="hidden-content">
+        <div id="toast" class="copy-toast">Đã sao chép!</div>
+
+        <!-- Header -->
+        <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
+            <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-2xl font-black text-[#009639] uppercase tracking-tighter">Sodick Vietnam Information</h1>
+                </div>
+                <div id="current-time" class="text-sm font-bold text-[#009639] mt-2 md:mt-0 bg-green-50 px-3 py-1 rounded-full border border-green-100"></div>
+            </div>
+        </header>
+
+        <main class="max-w-6xl mx-auto px-4 mt-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left Column -->
+                <div class="space-y-6">
+                    <!-- WiFi Section -->
+                    <section class="bg-white rounded-2xl shadow-md border-0 p-6 transition-all hover:shadow-lg">
+                        <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800 uppercase">
+                            <i class="fas fa-wifi sodick-green"></i> WiFi - Tháng <span id="wifi-month-label">1</span>
+                        </h2>
+                        
+                        <div class="space-y-6">
+                            <!-- Hà Nội Office -->
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h3 class="text-[10px] font-black text-slate-500 uppercase mb-3 flex items-center justify-between">
+                                    <span class="flex items-center gap-2"><i class="fas fa-location-dot text-yellow-500"></i> Hà Nội Office</span>
+                                    <span class="tag-hn office-tag">HN</span>
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="wifi-card p-3 rounded-xl border-l-4 border-yellow-400 flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Office Room</p>
+                                            <div class="flex items-baseline gap-2">
+                                                <span class="text-[10px] text-slate-300 font-medium">Sodick_HN</span>
+                                                <span id="hn-office-pass" class="text-yellow-400 font-black font-mono text-base tracking-widest">---</span>
+                                            </div>
                                         </div>
+                                        <button onclick="copyElement('hn-office-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-yellow-400 hover:bg-yellow-400 hover:text-slate-900 transition-all flex items-center justify-center">
+                                            <i class="far fa-copy text-sm"></i>
+                                        </button>
                                     </div>
-                                    <button onclick="copyElement('hn-office-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-yellow-400 hover:bg-yellow-400 hover:text-slate-900 transition-all flex items-center justify-center">
-                                        <i class="far fa-copy text-sm"></i>
-                                    </button>
+                                    <div class="wifi-card p-3 rounded-xl border-l-4 border-yellow-400 flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Meeting Room</p>
+                                            <div class="flex items-baseline gap-2">
+                                                <span class="text-[10px] text-slate-300 font-medium">Sodick_Meeting</span>
+                                                <span id="hn-meeting-pass" class="text-yellow-400 font-black font-mono text-base tracking-widest">---</span>
+                                            </div>
+                                        </div>
+                                        <button onclick="copyElement('hn-meeting-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-yellow-400 hover:bg-yellow-400 hover:text-slate-900 transition-all flex items-center justify-center">
+                                            <i class="far fa-copy text-sm"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="wifi-card p-3 rounded-xl border-l-4 border-yellow-400 flex items-center justify-between">
-                                    <div class="flex-1">
-                                        <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Meeting Room</p>
-                                        <div class="flex items-baseline gap-2">
-                                            <span class="text-[10px] text-slate-300 font-medium">Sodick_Meeting</span>
-                                            <span id="hn-meeting-pass" class="text-yellow-400 font-black font-mono text-base tracking-widest">---</span>
+                            </div>
+
+                            <!-- Hồ Chí Minh Office -->
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h3 class="text-[10px] font-black text-slate-500 uppercase mb-3 flex items-center justify-between">
+                                    <span class="flex items-center gap-2"><i class="fas fa-location-dot text-cyan-500"></i> HCM Office</span>
+                                    <span class="tag-hcm office-tag">HCM</span>
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="wifi-card p-3 rounded-xl border-l-4 border-cyan-400 flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Office Room</p>
+                                            <div class="flex items-baseline gap-2">
+                                                <span class="text-[10px] text-slate-300 font-medium">Sodick_HCM</span>
+                                                <span id="hcm-office-pass" class="text-cyan-400 font-black font-mono text-base tracking-widest">---</span>
+                                            </div>
                                         </div>
+                                        <button onclick="copyElement('hcm-office-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 transition-all flex items-center justify-center">
+                                            <i class="far fa-copy text-sm"></i>
+                                        </button>
                                     </div>
-                                    <button onclick="copyElement('hn-meeting-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-yellow-400 hover:bg-yellow-400 hover:text-slate-900 transition-all flex items-center justify-center">
-                                        <i class="far fa-copy text-sm"></i>
-                                    </button>
+                                    <div class="wifi-card p-3 rounded-xl border-l-4 border-cyan-400 flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Meeting Room</p>
+                                            <div class="flex items-baseline gap-2">
+                                                <span class="text-[10px] text-slate-300 font-medium">Sodick_Meeting</span>
+                                                <span id="hcm-meeting-pass" class="text-cyan-400 font-black font-mono text-base tracking-widest">---</span>
+                                            </div>
+                                        </div>
+                                        <button onclick="copyElement('hcm-meeting-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 transition-all flex items-center justify-center">
+                                            <i class="far fa-copy text-sm"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </section>
 
-                        <!-- Hồ Chí Minh Office -->
-                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                            <h3 class="text-[10px] font-black text-slate-500 uppercase mb-3 flex items-center justify-between">
-                                <span class="flex items-center gap-2"><i class="fas fa-location-dot text-cyan-500"></i> HCM Office</span>
-                                <span class="tag-hcm office-tag">HCM</span>
-                            </h3>
-                            <div class="space-y-2">
-                                <div class="wifi-card p-3 rounded-xl border-l-4 border-cyan-400 flex items-center justify-between">
-                                    <div class="flex-1">
-                                        <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Office Room</p>
-                                        <div class="flex items-baseline gap-2">
-                                            <span class="text-[10px] text-slate-300 font-medium">Sodick_HCM</span>
-                                            <span id="hcm-office-pass" class="text-cyan-400 font-black font-mono text-base tracking-widest">---</span>
-                                        </div>
-                                    </div>
-                                    <button onclick="copyElement('hcm-office-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 transition-all flex items-center justify-center">
-                                        <i class="far fa-copy text-sm"></i>
-                                    </button>
-                                </div>
-                                <div class="wifi-card p-3 rounded-xl border-l-4 border-cyan-400 flex items-center justify-between">
-                                    <div class="flex-1">
-                                        <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Meeting Room</p>
-                                        <div class="flex items-baseline gap-2">
-                                            <span class="text-[10px] text-slate-300 font-medium">Sodick_Meeting</span>
-                                            <span id="hcm-meeting-pass" class="text-cyan-400 font-black font-mono text-base tracking-widest">---</span>
-                                        </div>
-                                    </div>
-                                    <button onclick="copyElement('hcm-meeting-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 transition-all flex items-center justify-center">
-                                        <i class="far fa-copy text-sm"></i>
-                                    </button>
-                                </div>
+                    <!-- Birthday Month List -->
+                    <section class="bg-white rounded-2xl shadow-md border-0 p-6 transition-all hover:shadow-lg">
+                        <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800 uppercase">
+                            <i class="fas fa-birthday-cake text-pink-500"></i> Sinh nhật tháng <span id="birthday-month-label"></span>
+                        </h2>
+                        <div id="month-birthday-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
+                    </section>
+
+                    <!-- Company Info -->
+                    <section class="bg-white rounded-2xl shadow-md border-0 p-6 transition-all hover:shadow-lg">
+                        <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800 uppercase">
+                            <i class="fas fa-info-circle sodick-green"></i> Thông tin công ty
+                        </h2>
+                        <div class="space-y-4 text-sm">
+                            <div class="border-b pb-2">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Tên pháp nhân</p>
+                                <p id="company-name" class="font-bold text-slate-700 leading-tight">Công Ty TNHH Sodick Việt Nam</p>
+                            </div>
+                            <div class="border-b pb-2">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Mã số thuế</p>
+                                <p id="tax-code" class="font-bold text-slate-700 tracking-widest">0311956415</p>
+                            </div>
+                            <div class="border-b pb-2">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Địa chỉ trụ sở</p>
+                                <p id="company-address" class="font-medium text-slate-600 leading-tight text-[13px]">Số 609 Quốc Lộ 13, Phường Hiệp Bình, Thành phố Hồ Chí Minh, Việt Nam</p>
+                            </div>
+                            <div class="pb-2">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase mb-1 flex items-center gap-1">
+                                    <i class="fas fa-envelope"></i> Email nhận hóa đơn
+                                </p>
+                                <p id="company-email" class="text-[#009639] font-black">e-invoice@sodick.com.vn</p>
+                            </div>
+                            
+                            <button onclick="copyAllCompanyInfo()" class="w-full mt-2 py-3 bg-slate-100 rounded-xl text-slate-700 text-xs font-bold hover:bg-[#009639] hover:text-white transition-all flex items-center justify-center gap-2 border border-slate-200">
+                                <i class="fas fa-copy"></i> SAO CHÉP TOÀN BỘ THÔNG TIN
+                            </button>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column -->
+                <div class="lg:col-span-2 space-y-6">
+                    <section class="bg-white rounded-2xl shadow-md border-0 p-6">
+                        <div class="flex items-center justify-between mb-8">
+                            <h2 class="text-xl font-black flex items-center gap-2 text-slate-800 uppercase tracking-tight">
+                                <i class="fas fa-calendar-check text-red-500"></i> Lịch làm việc 2026
+                            </h2>
+                            <div class="flex items-center bg-slate-100 rounded-xl p-1 shadow-inner">
+                                <button onclick="changeMonth(-1)" class="w-10 h-10 flex items-center justify-center hover:bg-white hover:shadow-sm rounded-lg transition-all"><i class="fas fa-chevron-left text-slate-600"></i></button>
+                                <span id="calendar-title" class="font-black text-slate-700 w-36 text-center uppercase text-sm tracking-wide"></span>
+                                <button onclick="changeMonth(1)" class="w-10 h-10 flex items-center justify-center hover:bg-white hover:shadow-sm rounded-lg transition-all"><i class="fas fa-chevron-right text-slate-600"></i></button>
                             </div>
                         </div>
-                    </div>
-                </section>
 
-                <!-- Birthday Month List -->
-                <section class="bg-white rounded-2xl shadow-md border-0 p-6 transition-all hover:shadow-lg">
-                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800 uppercase">
-                        <i class="fas fa-birthday-cake text-pink-500"></i> Sinh nhật tháng <span id="birthday-month-label"></span>
-                    </h2>
-                    <div id="month-birthday-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
-                </section>
-
-                <!-- Company Info -->
-                <section class="bg-white rounded-2xl shadow-md border-0 p-6 transition-all hover:shadow-lg">
-                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800 uppercase">
-                        <i class="fas fa-info-circle sodick-green"></i> Thông tin công ty
-                    </h2>
-                    <div class="space-y-4 text-sm">
-                        <div class="border-b pb-2">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Tên pháp nhân</p>
-                            <p id="company-name" class="font-bold text-slate-700 leading-tight">Công Ty TNHH Sodick Việt Nam</p>
-                        </div>
-                        <div class="border-b pb-2">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Mã số thuế</p>
-                            <p id="tax-code" class="font-bold text-slate-700 tracking-widest">0311956415</p>
-                        </div>
-                        <div class="border-b pb-2">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Địa chỉ trụ sở</p>
-                            <p id="company-address" class="font-medium text-slate-600 leading-tight text-[13px]">Số 609 Quốc Lộ 13, Phường Hiệp Bình, Thành phố Hồ Chí Minh, Việt Nam</p>
-                        </div>
-                        <div class="pb-2">
-                            <p class="text-[10px] text-slate-400 font-bold uppercase mb-1 flex items-center gap-1">
-                                <i class="fas fa-envelope"></i> Email nhận hóa đơn
-                            </p>
-                            <p id="company-email" class="text-[#009639] font-black">e-invoice@sodick.com.vn</p>
+                        <div class="grid grid-cols-7 gap-1 text-center font-black text-[10px] text-slate-400 mb-4 uppercase tracking-widest">
+                            <div>Thứ 2</div><div>Thứ 3</div><div>Thứ 4</div><div>Thứ 5</div><div>Thứ 6</div><div class="text-sky-600">Thứ 7</div><div class="text-red-500">C.Nhật</div>
                         </div>
                         
-                        <button onclick="copyAllCompanyInfo()" class="w-full mt-2 py-3 bg-slate-100 rounded-xl text-slate-700 text-xs font-bold hover:bg-[#009639] hover:text-white transition-all flex items-center justify-center gap-2 border border-slate-200">
-                            <i class="fas fa-copy"></i> SAO CHÉP TOÀN BỘ THÔNG TIN
-                        </button>
-                    </div>
-                </section>
-            </div>
+                        <div id="calendar-body" class="calendar-grid"></div>
 
-            <!-- Right Column -->
-            <div class="lg:col-span-2 space-y-6">
-                <section class="bg-white rounded-2xl shadow-md border-0 p-6">
-                    <div class="flex items-center justify-between mb-8">
-                        <h2 class="text-xl font-black flex items-center gap-2 text-slate-800 uppercase tracking-tight">
-                            <i class="fas fa-calendar-check text-red-500"></i> Lịch làm việc 2026
-                        </h2>
-                        <div class="flex items-center bg-slate-100 rounded-xl p-1 shadow-inner">
-                            <button onclick="changeMonth(-1)" class="w-10 h-10 flex items-center justify-center hover:bg-white hover:shadow-sm rounded-lg transition-all"><i class="fas fa-chevron-left text-slate-600"></i></button>
-                            <span id="calendar-title" class="font-black text-slate-700 w-36 text-center uppercase text-sm tracking-wide"></span>
-                            <button onclick="changeMonth(1)" class="w-10 h-10 flex items-center justify-center hover:bg-white hover:shadow-sm rounded-lg transition-all"><i class="fas fa-chevron-right text-slate-600"></i></button>
+                        <div class="mt-8 pt-6 border-t border-dashed border-slate-200">
+                            <h3 class="text-xs font-black mb-4 text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-list-ul"></i> Chi tiết trong tháng
+                            </h3>
+                            <div id="event-list" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-2"></div>
                         </div>
-                    </div>
+                    </section>
 
-                    <div class="grid grid-cols-7 gap-1 text-center font-black text-[10px] text-slate-400 mb-4 uppercase tracking-widest">
-                        <div>Thứ 2</div><div>Thứ 3</div><div>Thứ 4</div><div>Thứ 5</div><div>Thứ 6</div><div class="text-sky-600">Thứ 7</div><div class="text-red-500">C.Nhật</div>
+                    <!-- Legend -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-wrap justify-center gap-6">
+                        <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-off-day rounded"></div> Nghỉ Lễ / CN</div>
+                        <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-sat-off rounded"></div> Nghỉ Thứ 7</div>
+                        <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-tv-day rounded"></div> Service Meeting</div>
+                        <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-leader-day rounded"></div> Leader Meeting</div>
+                        <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-trip rounded"></div> Company Trip</div>
+                        <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-event rounded"></div> Hội chợ</div>
+                        <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 border-2 border-pink-400 rounded"></div> Sinh nhật</div>
                     </div>
-                    
-                    <div id="calendar-body" class="calendar-grid"></div>
-
-                    <div class="mt-8 pt-6 border-t border-dashed border-slate-200">
-                        <h3 class="text-xs font-black mb-4 text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                            <i class="fas fa-list-ul"></i> Chi tiết trong tháng
-                        </h3>
-                        <div id="event-list" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-2"></div>
-                    </div>
-                </section>
-
-                <!-- Legend -->
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-wrap justify-center gap-6">
-                    <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-off-day rounded"></div> Nghỉ Lễ / CN</div>
-                    <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-sat-off rounded"></div> Nghỉ Thứ 7</div>
-                    <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-tv-day rounded"></div> Service Meeting</div>
-                    <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-leader-day rounded"></div> Leader Meeting</div>
-                    <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-trip rounded"></div> Company Trip</div>
-                    <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 is-event rounded"></div> Hội chợ</div>
-                    <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600"><div class="w-4 h-4 border-2 border-pink-400 rounded"></div> Sinh nhật</div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script>
+        // --- LOGIC ĐĂNG NHẬP ---
+        function handleLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const error = document.getElementById('login-error');
+
+            if (user === 'sodick' && pass === 'sodick0000') {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden-content');
+                
+                // Khởi tạo ứng dụng sau khi login thành công
+                updateTime(); 
+                renderCalendar(); 
+                setInterval(updateTime, 1000);
+            } else {
+                error.classList.remove('hidden');
+            }
+        }
+
+        // Hỗ trợ Enter để đăng nhập
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+
         // --- DỮ LIỆU WIFI THEO QUÝ ---
         const wifiSchedule = {
             1: { hcm: { off: "km792cu5", meet: "jf6c8wux" }, hn: { off: "qbj85g7h", meet: "q6p32mc9" } },
@@ -487,12 +560,6 @@
             document.body.removeChild(dummy);
             showToast();
         }
-
-        window.onload = function() {
-            updateTime(); 
-            renderCalendar(); 
-            setInterval(updateTime, 1000);
-        };
     </script>
 </body>
 </html>
