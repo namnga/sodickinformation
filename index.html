@@ -96,7 +96,6 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
 
-        /* Login screen styles */
         #login-screen {
             position: fixed;
             inset: 0;
@@ -124,27 +123,33 @@
                 <p class="text-slate-500 text-sm font-medium">Vui lòng đăng nhập để tiếp tục</p>
             </div>
             
-            <div class="space-y-4">
+            <form id="login-form" onsubmit="event.preventDefault(); handleLogin();" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1 px-1">Tên đăng nhập</label>
-                    <input type="text" id="username" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#009639] focus:border-transparent transition-all font-medium" placeholder="Nhập username...">
+                    <label for="username" class="block text-xs font-bold text-slate-400 uppercase mb-1 px-1">Tên đăng nhập</label>
+                    <input type="text" id="username" name="username" autocomplete="username" required
+                           class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#009639] focus:border-transparent transition-all font-medium" placeholder="Nhập username...">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1 px-1">Mật khẩu</label>
-                    <input type="password" id="password" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#009639] focus:border-transparent transition-all font-medium" placeholder="Nhập password...">
+                    <label for="password" class="block text-xs font-bold text-slate-400 uppercase mb-1 px-1">Mật khẩu</label>
+                    <input type="password" id="password" name="password" autocomplete="current-password" required
+                           class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#009639] focus:border-transparent transition-all font-medium" placeholder="Nhập password...">
+                </div>
+                <div class="flex items-center gap-2 px-1">
+                    <input type="checkbox" id="remember-me" class="w-4 h-4 text-[#009639] border-slate-300 rounded focus:ring-[#009639]">
+                    <label for="remember-me" class="text-xs font-bold text-slate-500 cursor-pointer">Ghi nhớ đăng nhập</label>
                 </div>
                 <div id="login-error" class="text-red-500 text-xs font-bold text-center hidden">Sai tên đăng nhập hoặc mật khẩu!</div>
-                <button onclick="handleLogin()" class="w-full py-4 bg-[#009639] text-white rounded-xl font-black uppercase tracking-widest hover:bg-[#007d2f] shadow-lg shadow-green-200 transition-all active:scale-95">
+                <button type="submit" class="w-full py-4 bg-[#009639] text-white rounded-xl font-black uppercase tracking-widest hover:bg-[#007d2f] shadow-lg shadow-green-200 transition-all active:scale-95">
                     Đăng nhập
                 </button>
-            </div>
+            </form>
             <div class="mt-8 text-center">
                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">© 2026 Sodick Vietnam Ltd.</p>
             </div>
         </div>
     </div>
 
-    <!-- Nội dung chính (Ẩn lúc đầu) -->
+    <!-- Nội dung chính -->
     <div id="main-content" class="hidden-content">
         <div id="toast" class="copy-toast">Đã sao chép!</div>
 
@@ -154,7 +159,12 @@
                 <div class="flex items-center gap-4">
                     <h1 class="text-2xl font-black text-[#009639] uppercase tracking-tighter">Sodick Vietnam Information</h1>
                 </div>
-                <div id="current-time" class="text-sm font-bold text-[#009639] mt-2 md:mt-0 bg-green-50 px-3 py-1 rounded-full border border-green-100"></div>
+                <div class="flex items-center gap-3">
+                    <div id="current-time" class="text-sm font-bold text-[#009639] bg-green-50 px-3 py-1 rounded-full border border-green-100"></div>
+                    <button onclick="handleLogout()" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors" title="Đăng xuất">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -329,26 +339,35 @@
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
             const error = document.getElementById('login-error');
+            const rememberMe = document.getElementById('remember-me').checked;
 
             if (user === 'sodick' && pass === 'sodick0000') {
+                // Hiển thị nội dung chính
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-content').classList.remove('hidden-content');
                 
-                // Khởi tạo ứng dụng sau khi login thành công
-                updateTime(); 
-                renderCalendar(); 
-                setInterval(updateTime, 1000);
+                // Nếu chọn "Ghi nhớ", lưu vào localStorage
+                if (rememberMe) {
+                    localStorage.setItem('sodick_logged_in', 'true');
+                }
+
+                // Khởi tạo ứng dụng
+                initApp();
             } else {
                 error.classList.remove('hidden');
             }
         }
 
-        // Hỗ trợ Enter để đăng nhập
-        document.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                handleLogin();
-            }
-        });
+        function handleLogout() {
+            localStorage.removeItem('sodick_logged_in');
+            location.reload(); // Tải lại trang để về màn hình đăng nhập
+        }
+
+        function initApp() {
+            updateTime(); 
+            renderCalendar(); 
+            setInterval(updateTime, 1000);
+        }
 
         // --- DỮ LIỆU WIFI THEO QUÝ ---
         const wifiSchedule = {
@@ -451,7 +470,6 @@
             const bdayMonthLabelEl = document.getElementById('birthday-month-label');
             if (bdayMonthLabelEl) bdayMonthLabelEl.innerText = month + 1;
 
-            // WiFi update
             const m = month + 1;
             const wifiMonthLabelEl = document.getElementById('wifi-month-label');
             if (wifiMonthLabelEl) wifiMonthLabelEl.innerText = m;
@@ -560,6 +578,16 @@
             document.body.removeChild(dummy);
             showToast();
         }
+
+        // --- KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP KHI TẢI TRANG ---
+        window.onload = function() {
+            const isLoggedIn = localStorage.getItem('sodick_logged_in');
+            if (isLoggedIn === 'true') {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden-content');
+                initApp();
+            }
+        };
     </script>
 </body>
 </html>
