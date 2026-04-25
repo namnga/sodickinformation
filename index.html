@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sodick Vietnam - Sodick Vietnam Information</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -249,7 +250,7 @@
     </main>
 
     <script>
-        // --- CẬP NHẬT DỮ LIỆU WIFI THEO QUÝ ---
+        // --- DỮ LIỆU WIFI THEO QUÝ ---
         const wifiSchedule = {
             // Tháng 1 - 3
             1: { hcm: { off: "km792cu5", meet: "jf6c8wux" }, hn: { off: "qbj85g7h", meet: "q6p32mc9" } },
@@ -270,7 +271,7 @@
         };
 
         const birthdays = [
-            // HN
+            // Hà Nội
             { name: "Duong Ngoc Tuan", m: 1, d: 1, dept: "Sales", office: "HN" },
             { name: "Nguyen Xuan Dung", m: 1, d: 9, dept: "Sales", office: "HN" },
             { name: "Bui Thanh Tu", m: 3, d: 29, dept: "MT Service", office: "HN" },
@@ -289,7 +290,7 @@
             { name: "Nguyen Tien Hung", m: 10, d: 31, dept: "MT Service", office: "HN" },
             { name: "Pham Van Ninh", m: 11, d: 13, dept: "MT Service", office: "HN" },
             { name: "Nguyen Hoang", m: 11, d: 15, dept: "Sales", office: "HN" },
-            // HCM
+            // Hồ Chí Minh
             { name: "Hong Nhat Quang", m: 1, d: 4, dept: "Sales Engineer", office: "HCM" },
             { name: "Dang Thai Khang", m: 1, d: 5, dept: "MT Service", office: "HCM" },
             { name: "Tran Minh Hoang", m: 1, d: 18, dept: "MT Service", office: "HCM" },
@@ -321,7 +322,21 @@
         const satWorkDays = ["2026-01-24", "2026-02-28", "2026-03-28", "2026-04-25", "2026-05-23", "2026-06-27", "2026-07-25", "2026-08-22", "2026-09-26", "2026-10-24", "2026-11-21", "2026-12-26"];
         
         const calendarData = {
-            holidays: {"2026-01-01": "Tết Dương Lịch", "2026-02-16": "Tết Nguyên Đán", "2026-02-17": "Tết Nguyên Đán", "2026-02-18": "Tết Nguyên Đán", "2026-02-19": "Tết Nguyên Đán", "2026-02-20": "Tết Nguyên Đán", "2026-04-26": "Giỗ tổ Hùng Vương", "2026-04-27": "Nghỉ bù Giỗ tổ", "2026-04-30": "Giải phóng Miền Nam", "2026-05-01": "Quốc tế Lao động", "2026-09-01": "Quốc khánh", "2026-09-02": "Quốc khánh"},
+            holidays: {
+                "2026-01-01": "Tết Dương Lịch", 
+                "2026-02-16": "Tết Nguyên Đán", 
+                "2026-02-17": "Tết Nguyên Đán", 
+                "2026-02-18": "Tết Nguyên Đán", 
+                "2026-02-19": "Tết Nguyên Đán", 
+                "2026-02-20": "Tết Nguyên Đán", 
+                "2026-04-26": "Giỗ tổ Hùng Vương", 
+                "2026-04-27": "Nghỉ bù Giỗ tổ", 
+                "2026-04-30": "Giải phóng Miền Nam", 
+                "2026-05-01": "Quốc tế Lao động", 
+                "2026-09-01": "Quốc khánh", 
+                "2026-09-02": "Quốc khánh",
+                "2026-11-24": "Ngày văn hóa Việt Nam" // Đã bổ sung
+            },
             exhibitions: {"2026-04-15": "VIMF Hải Phòng", "2026-04-16": "VIMF Hải Phòng", "2026-04-17": "VIMF Hải Phòng", "2026-05-22": "COMPANY TRIP", "2026-05-23": "COMPANY TRIP", "2026-05-24": "COMPANY TRIP", "2026-06-17": "VIMF Bình Dương", "2026-06-18": "VIMF Bình Dương", "2026-06-19": "VIMF Bình Dương", "2026-07-01": "MTA Vietnam (HCM)", "2026-07-02": "MTA Vietnam (HCM)", "2026-07-03": "MTA Vietnam (HCM)", "2026-07-04": "MTA Vietnam (HCM)", "2026-10-13": "MTA Hanoi", "2026-10-14": "MTA Hanoi", "2026-10-15": "MTA Hanoi", "2026-11-04": "VIMF Bắc Ninh", "2026-11-05": "VIMF Bắc Ninh", "2026-11-06": "VIMF Bắc Ninh", "2026-02-06": "Year-end party (HCM)", "2026-02-13": "Year-end party (HN)"}
         };
 
@@ -331,7 +346,10 @@
         function updateTime() {
             const now = new Date();
             const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-            document.getElementById('current-time').innerText = `${days[now.getDay()]}, ${now.toLocaleDateString('vi-VN')} - ${now.toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'})}`;
+            const timeEl = document.getElementById('current-time');
+            if (timeEl) {
+                timeEl.innerText = `${days[now.getDay()]}, ${now.toLocaleDateString('vi-VN')} - ${now.toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'})}`;
+            }
         }
 
         function renderCalendar() {
@@ -339,12 +357,17 @@
             const month = viewDate.getMonth();
             const currentMonthBirthdays = birthdays.filter(b => b.m === (month + 1));
             
-            document.getElementById('calendar-title').innerText = `Tháng ${month + 1} - ${year}`;
-            document.getElementById('birthday-month-label').innerText = month + 1;
+            const calendarTitleEl = document.getElementById('calendar-title');
+            if (calendarTitleEl) calendarTitleEl.innerText = `Tháng ${month + 1} - ${year}`;
+            
+            const bdayMonthLabelEl = document.getElementById('birthday-month-label');
+            if (bdayMonthLabelEl) bdayMonthLabelEl.innerText = month + 1;
 
-            // --- Cập nhật WiFi theo tháng hiển thị ---
+            // WiFi update
             const m = month + 1;
-            document.getElementById('wifi-month-label').innerText = m;
+            const wifiMonthLabelEl = document.getElementById('wifi-month-label');
+            if (wifiMonthLabelEl) wifiMonthLabelEl.innerText = m;
+            
             const wifi = wifiSchedule[m] || wifiSchedule[1];
             document.getElementById('hn-office-pass').innerText = wifi.hn.off;
             document.getElementById('hn-meeting-pass').innerText = wifi.hn.meet;
@@ -355,16 +378,26 @@
             const lastDay = new Date(year, month + 1, 0);
             let startDay = firstDay.getDay() - 1; if (startDay === -1) startDay = 6;
 
-            const body = document.getElementById('calendar-body'); body.innerHTML = '';
-            const eventList = document.getElementById('event-list'); eventList.innerHTML = '';
-            const sidebarBdays = document.getElementById('month-birthday-list'); sidebarBdays.innerHTML = '';
+            const body = document.getElementById('calendar-body'); 
+            if (!body) return;
+            body.innerHTML = '';
+            
+            const eventList = document.getElementById('event-list'); 
+            if (eventList) eventList.innerHTML = '';
+            
+            const sidebarBdays = document.getElementById('month-birthday-list'); 
+            if (sidebarBdays) sidebarBdays.innerHTML = '';
 
             // Sidebar Sinh nhật
-            if (currentMonthBirthdays.length > 0) {
-                currentMonthBirthdays.sort((a,b)=>a.d-b.d).forEach(b => {
-                    sidebarBdays.innerHTML += `<div class="flex items-center gap-3 p-3 bg-pink-50 rounded-xl border border-pink-100"><div class="w-8 h-8 rounded-full bg-pink-200 flex items-center justify-center text-pink-600 font-bold text-xs">${b.d}</div><div><p class="text-sm font-bold text-pink-900">${b.name} <span class="office-tag ${b.office === 'HN' ? 'tag-hn':'tag-hcm'}">${b.office}</span></p><p class="text-[9px] text-pink-500 font-black uppercase">${b.dept}</p></div></div>`;
-                });
-            } else { sidebarBdays.innerHTML = '<div class="py-10 text-center opacity-40 uppercase text-[10px] font-bold">Không có sinh nhật</div>'; }
+            if (sidebarBdays) {
+                if (currentMonthBirthdays.length > 0) {
+                    currentMonthBirthdays.sort((a,b)=>a.d-b.d).forEach(b => {
+                        sidebarBdays.innerHTML += `<div class="flex items-center gap-3 p-3 bg-pink-50 rounded-xl border border-pink-100"><div class="w-8 h-8 rounded-full bg-pink-200 flex items-center justify-center text-pink-600 font-bold text-xs">${b.d}</div><div><p class="text-sm font-bold text-pink-900">${b.name} <span class="office-tag ${b.office === 'HN' ? 'tag-hn':'tag-hcm'}">${b.office}</span></p><p class="text-[9px] text-pink-500 font-black uppercase">${b.dept}</p></div></div>`;
+                    });
+                } else { 
+                    sidebarBdays.innerHTML = '<div class="py-10 text-center opacity-40 uppercase text-[10px] font-bold">Không có sinh nhật</div>'; 
+                }
+            }
 
             for (let i = 0; i < startDay; i++) body.innerHTML += `<div class="day-cell opacity-20"></div>`;
 
@@ -396,15 +429,17 @@
 
                 body.innerHTML += `<div class="day-cell ${typeClass} ${dateStr === todayStr ? 'is-today shadow-lg':''}"><span class="text-sm">${d}</span><div class="flex gap-0.5">${isSM ? '<span class="badge-label bg-sm">SM</span>':''}${isLM ? '<span class="badge-label bg-lm">LM</span>':''}</div>${tooltip.length > 0 ? `<div class="tooltip">${tooltip.join(' + ')}</div>`:''}</div>`;
 
-                const addDetail = (label, color, text) => {
-                    const c = color === 'purple' ? 'purple' : color;
-                    eventList.innerHTML += `<div class="flex items-center gap-3 p-2 bg-${c}-50 rounded-lg border border-${c}-100"><span class="bg-${c}-600 text-white text-[9px] font-black px-2 py-1 rounded uppercase">${label}</span><div class="text-[11px] font-bold text-${c}-900">${d}/${month+1}: ${text}</div></div>`;
-                };
-                if (holiday) addDetail('Lễ', 'red', holiday);
-                if (isLM) addDetail('Leader', 'indigo', isLM);
-                if (exhibition) addDetail(exhibition === "COMPANY TRIP" ? 'Trip':'Sự kiện', exhibition === "COMPANY TRIP" ? 'purple':'green', exhibition);
-                if (isSM) addDetail('Meeting', 'emerald', 'Service Meeting (8:30)');
-                birthdayPeople.forEach(b => addDetail('Sinh nhật', 'pink', `${b.name} (${b.office})`));
+                if (eventList) {
+                    const addDetail = (label, color, text) => {
+                        const c = color === 'purple' ? 'purple' : color;
+                        eventList.innerHTML += `<div class="flex items-center gap-3 p-2 bg-${c}-50 rounded-lg border border-${c}-100"><span class="bg-${c}-600 text-white text-[9px] font-black px-2 py-1 rounded uppercase">${label}</span><div class="text-[11px] font-bold text-${c}-900">${d}/${month+1}: ${text}</div></div>`;
+                    };
+                    if (holiday) addDetail('Lễ', 'red', holiday);
+                    if (isLM) addDetail('Leader', 'indigo', isLM);
+                    if (exhibition) addDetail(exhibition === "COMPANY TRIP" ? 'Trip':'Sự kiện', exhibition === "COMPANY TRIP" ? 'purple':'green', exhibition);
+                    if (isSM) addDetail('Meeting', 'emerald', 'Service Meeting (8:30)');
+                    birthdayPeople.forEach(b => addDetail('Sinh nhật', 'pink', `${b.name} (${b.office})`));
+                }
             }
         }
 
@@ -415,12 +450,22 @@
         }
 
         function copyElement(id) {
-            const text = document.getElementById(id).innerText;
-            const dummy = document.createElement("textarea"); document.body.appendChild(dummy);
-            dummy.value = text; dummy.select(); document.execCommand("copy"); document.body.removeChild(dummy);
+            const el = document.getElementById(id);
+            if (!el) return;
+            const text = el.innerText;
+            const dummy = document.createElement("textarea"); 
+            document.body.appendChild(dummy);
+            dummy.value = text; 
+            dummy.select(); 
+            document.execCommand("copy"); 
+            document.body.removeChild(dummy);
         }
 
-        updateTime(); renderCalendar(); setInterval(updateTime, 1000);
+        window.onload = function() {
+            updateTime(); 
+            renderCalendar(); 
+            setInterval(updateTime, 1000);
+        };
     </script>
 </body>
 </html>
