@@ -71,15 +71,36 @@
         .day-cell:hover .tooltip { visibility: visible; }
         .day-cell:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
         
+        /* WiFi Card Styles */
         .wifi-card {
-            background: #0f172a;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            background: #1e293b;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transition: all 0.2s;
         }
-        .wifi-card:hover { transform: scale(1.02); }
+        .wifi-card:hover { transform: translateY(-1px); box-shadow: 0 8px 15px -5px rgba(0, 0, 0, 0.2); }
+
+        .copy-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body class="pb-12">
+
+    <div id="toast" class="copy-toast">Đã sao chép!</div>
 
     <!-- Header -->
     <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
@@ -103,67 +124,69 @@
                     </h2>
                     
                     <div class="space-y-6">
-                        <!-- Hà Nội Office (Màu Vàng) -->
-                        <div class="p-4 bg-yellow-50 rounded-xl border-2 border-yellow-200">
-                            <h3 class="text-xs font-black text-yellow-700 uppercase mb-3 flex items-center justify-between">
-                                Hà Nội Office <span class="tag-hn office-tag">HN</span>
+                        <!-- Hà Nội Office -->
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <h3 class="text-[10px] font-black text-slate-500 uppercase mb-3 flex items-center justify-between">
+                                <span class="flex items-center gap-2"><i class="fas fa-location-dot text-yellow-500"></i> Hà Nội Office</span>
+                                <span class="tag-hn office-tag">HN</span>
                             </h3>
-                            <div class="space-y-3">
-                                <div class="wifi-card p-3 rounded-xl border-l-4 border-yellow-400">
-                                    <div class="flex-1 mb-2">
-                                        <p class="text-[9px] text-slate-400 font-bold uppercase mb-1">Office Room</p>
-                                        <div class="flex flex-col">
-                                            <span class="text-[11px] text-slate-300">ID: <span class="text-white font-bold">Sodick_HN</span></span>
-                                            <span class="text-[11px] text-slate-300">Pass: <span id="hn-office-pass" class="text-yellow-400 font-black font-mono text-lg tracking-widest">---</span></span>
+                            <div class="space-y-2">
+                                <div class="wifi-card p-3 rounded-xl border-l-4 border-yellow-400 flex items-center justify-between">
+                                    <div class="flex-1">
+                                        <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Office Room</p>
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-[10px] text-slate-300 font-medium">Sodick_HN</span>
+                                            <span id="hn-office-pass" class="text-yellow-400 font-black font-mono text-base tracking-widest">---</span>
                                         </div>
                                     </div>
-                                    <button onclick="copyElement('hn-office-pass')" class="w-full py-1 bg-slate-800 rounded text-yellow-400 text-[10px] font-bold hover:bg-yellow-400 hover:text-black transition-all uppercase">
-                                        <i class="far fa-copy mr-1"></i> Copy Password
+                                    <button onclick="copyElement('hn-office-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-yellow-400 hover:bg-yellow-400 hover:text-slate-900 transition-all flex items-center justify-center">
+                                        <i class="far fa-copy text-sm"></i>
                                     </button>
                                 </div>
-                                <div class="wifi-card p-3 rounded-xl border-l-4 border-yellow-400">
-                                    <div class="flex-1 mb-2">
-                                        <p class="text-[9px] text-slate-400 font-bold uppercase mb-1">Meeting Room</p>
-                                        <div class="flex flex-col">
-                                            <span class="text-[11px] text-slate-300">ID: <span class="text-white font-bold">Sodick_Meeting</span></span>
-                                            <span class="text-[11px] text-slate-300">Pass: <span id="hn-meeting-pass" class="text-yellow-400 font-black font-mono text-lg tracking-widest">---</span></span>
+                                <div class="wifi-card p-3 rounded-xl border-l-4 border-yellow-400 flex items-center justify-between">
+                                    <div class="flex-1">
+                                        <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Meeting Room</p>
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-[10px] text-slate-300 font-medium">Sodick_Meeting</span>
+                                            <span id="hn-meeting-pass" class="text-yellow-400 font-black font-mono text-base tracking-widest">---</span>
                                         </div>
                                     </div>
-                                    <button onclick="copyElement('hn-meeting-pass')" class="w-full py-1 bg-slate-800 rounded text-yellow-400 text-[10px] font-bold hover:bg-yellow-400 hover:text-black transition-all uppercase">
-                                        <i class="far fa-copy mr-1"></i> Copy Password
+                                    <button onclick="copyElement('hn-meeting-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-yellow-400 hover:bg-yellow-400 hover:text-slate-900 transition-all flex items-center justify-center">
+                                        <i class="far fa-copy text-sm"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Hồ Chí Minh Office (Màu Xanh Cyan) -->
-                        <div class="p-4 bg-cyan-50 rounded-xl border-2 border-cyan-200">
-                            <h3 class="text-xs font-black text-cyan-700 uppercase mb-3 flex items-center justify-between">
-                                HCM Office <span class="tag-hcm office-tag">HCM</span>
+                        <!-- Hồ Chí Minh Office -->
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <h3 class="text-[10px] font-black text-slate-500 uppercase mb-3 flex items-center justify-between">
+                                <span class="flex items-center gap-2"><i class="fas fa-location-dot text-cyan-500"></i> HCM Office</span>
+                                <span class="tag-hcm office-tag">HCM</span>
                             </h3>
-                            <div class="space-y-3">
-                                <div class="wifi-card p-3 rounded-xl border-l-4 border-cyan-400">
-                                    <div class="flex-1 mb-2">
-                                        <p class="text-[9px] text-slate-400 font-bold uppercase mb-1">Office Room</p>
-                                        <div class="flex flex-col">
-                                            <span class="text-[11px] text-slate-300">ID: <span class="text-white font-bold">Sodick_HCM</span></span>
-                                            <span class="text-[11px] text-slate-300">Pass: <span id="hcm-office-pass" class="text-cyan-400 font-black font-mono text-lg tracking-widest">---</span></span>
+                            <div class="space-y-2">
+                                <div class="wifi-card p-3 rounded-xl border-l-4 border-cyan-400 flex items-center justify-between">
+                                    <div class="flex-1">
+                                        <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Office Room</p>
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-[10px] text-slate-300 font-medium">Sodick_HCM</span>
+                                            <span id="hcm-office-pass" class="text-cyan-400 font-black font-mono text-base tracking-widest">---</span>
                                         </div>
                                     </div>
-                                    <button onclick="copyElement('hcm-office-pass')" class="w-full py-1 bg-slate-800 rounded text-cyan-400 text-[10px] font-bold hover:bg-cyan-400 hover:text-black transition-all uppercase">
-                                        <i class="far fa-copy mr-1"></i> Copy Password
+                                    <button onclick="copyElement('hcm-office-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 transition-all flex items-center justify-center">
+                                        <i class="far fa-copy text-sm"></i>
                                     </button>
                                 </div>
-                                <div class="wifi-card p-3 rounded-xl border-l-4 border-cyan-400">
-                                    <div class="flex-1 mb-2">
-                                        <p class="text-[9px] text-slate-400 font-bold uppercase mb-1">Meeting Room</p>
-                                        <div class="flex flex-col">
-                                            <span class="text-[11px] text-slate-300">ID: <span class="text-white font-bold">Sodick_Meeting</span></span>
-                                            <span class="text-[11px] text-slate-300">Pass: <span id="hcm-meeting-pass" class="text-cyan-400 font-black font-mono text-lg tracking-widest">---</span></span>
+                                <div class="wifi-card p-3 rounded-xl border-l-4 border-cyan-400 flex items-center justify-between">
+                                    <div class="flex-1">
+                                        <p class="text-[8px] text-slate-400 font-bold uppercase mb-0.5">Meeting Room</p>
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-[10px] text-slate-300 font-medium">Sodick_Meeting</span>
+                                            <span id="hcm-meeting-pass" class="text-cyan-400 font-black font-mono text-base tracking-widest">---</span>
                                         </div>
                                     </div>
-                                    <button onclick="copyElement('hcm-meeting-pass')" class="w-full py-1 bg-slate-800 rounded text-cyan-400 text-[10px] font-bold hover:bg-cyan-400 hover:text-black transition-all uppercase">
-                                        <i class="far fa-copy mr-1"></i> Copy Password
+                                    <button onclick="copyElement('hcm-meeting-pass')" class="w-8 h-8 bg-slate-700 rounded-lg text-cyan-400 hover:bg-cyan-400 hover:text-slate-900 transition-all flex items-center justify-center">
+                                        <i class="far fa-copy text-sm"></i>
                                     </button>
                                 </div>
                             </div>
@@ -187,22 +210,26 @@
                     <div class="space-y-4 text-sm">
                         <div class="border-b pb-2">
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Tên pháp nhân</p>
-                            <p class="font-bold text-slate-700 leading-tight">Công Ty TNHH Sodick Việt Nam</p>
+                            <p id="company-name" class="font-bold text-slate-700 leading-tight">Công Ty TNHH Sodick Việt Nam</p>
                         </div>
                         <div class="border-b pb-2">
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Mã số thuế</p>
-                            <p class="font-bold text-slate-700 tracking-widest">0311956415</p>
+                            <p id="tax-code" class="font-bold text-slate-700 tracking-widest">0311956415</p>
                         </div>
                         <div class="border-b pb-2">
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Địa chỉ trụ sở</p>
-                            <p class="font-medium text-slate-600 leading-tight">609 Quốc Lộ 13, P. Hiệp Bình, TP. Thủ Đức, TP. HCM</p>
+                            <p id="company-address" class="font-medium text-slate-600 leading-tight text-[13px]">Số 609 Quốc Lộ 13, Phường Hiệp Bình, Thành phố Hồ Chí Minh, Việt Nam</p>
                         </div>
-                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                            <p class="text-[10px] text-slate-500 mb-1 font-bold flex items-center gap-1 uppercase">
-                                <i class="fas fa-envelope"></i> Email nhận hóa đơn:
+                        <div class="pb-2">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase mb-1 flex items-center gap-1">
+                                <i class="fas fa-envelope"></i> Email nhận hóa đơn
                             </p>
-                            <a href="mailto:e-invoice@sodick.com.vn" class="text-blue-600 font-black hover:underline block break-all">e-invoice@sodick.com.vn</a>
+                            <p id="company-email" class="text-[#009639] font-black">e-invoice@sodick.com.vn</p>
                         </div>
+                        
+                        <button onclick="copyAllCompanyInfo()" class="w-full mt-2 py-3 bg-slate-100 rounded-xl text-slate-700 text-xs font-bold hover:bg-[#009639] hover:text-white transition-all flex items-center justify-center gap-2 border border-slate-200">
+                            <i class="fas fa-copy"></i> SAO CHÉP TOÀN BỘ THÔNG TIN
+                        </button>
                     </div>
                 </section>
             </div>
@@ -252,26 +279,21 @@
     <script>
         // --- DỮ LIỆU WIFI THEO QUÝ ---
         const wifiSchedule = {
-            // Tháng 1 - 3
             1: { hcm: { off: "km792cu5", meet: "jf6c8wux" }, hn: { off: "qbj85g7h", meet: "q6p32mc9" } },
             2: { hcm: { off: "km792cu5", meet: "jf6c8wux" }, hn: { off: "qbj85g7h", meet: "q6p32mc9" } },
             3: { hcm: { off: "km792cu5", meet: "jf6c8wux" }, hn: { off: "qbj85g7h", meet: "q6p32mc9" } },
-            // Tháng 4 - 6
             4: { hcm: { off: "zqcrg6f2", meet: "h3g4tvcu" }, hn: { off: "wfh5e3tp", meet: "j4bugw63" } },
             5: { hcm: { off: "zqcrg6f2", meet: "h3g4tvcu" }, hn: { off: "wfh5e3tp", meet: "j4bugw63" } },
             6: { hcm: { off: "zqcrg6f2", meet: "h3g4tvcu" }, hn: { off: "wfh5e3tp", meet: "j4bugw63" } },
-            // Tháng 7 - 9
             7: { hcm: { off: "kg3u6m2q", meet: "cnpx9va7" }, hn: { off: "mhtw24xd", meet: "s5qn9bkg" } },
             8: { hcm: { off: "kg3u6m2q", meet: "cnpx9va7" }, hn: { off: "mhtw24xd", meet: "s5qn9bkg" } },
             9: { hcm: { off: "kg3u6m2q", meet: "cnpx9va7" }, hn: { off: "mhtw24xd", meet: "s5qn9bkg" } },
-            // Tháng 10 - 12
             10: { hcm: { off: "p36s42qe", meet: "jd95e2ks" }, hn: { off: "ejcfrh9p", meet: "pm54wzjy" } },
             11: { hcm: { off: "p36s42qe", meet: "jd95e2ks" }, hn: { off: "ejcfrh9p", meet: "pm54wzjy" } },
             12: { hcm: { off: "p36s42qe", meet: "jd95e2ks" }, hn: { off: "ejcfrh9p", meet: "pm54wzjy" } }
         };
 
         const birthdays = [
-            // Hà Nội
             { name: "Duong Ngoc Tuan", m: 1, d: 1, dept: "Sales", office: "HN" },
             { name: "Nguyen Xuan Dung", m: 1, d: 9, dept: "Sales", office: "HN" },
             { name: "Bui Thanh Tu", m: 3, d: 29, dept: "MT Service", office: "HN" },
@@ -290,7 +312,6 @@
             { name: "Nguyen Tien Hung", m: 10, d: 31, dept: "MT Service", office: "HN" },
             { name: "Pham Van Ninh", m: 11, d: 13, dept: "MT Service", office: "HN" },
             { name: "Nguyen Hoang", m: 11, d: 15, dept: "Sales", office: "HN" },
-            // Hồ Chí Minh
             { name: "Hong Nhat Quang", m: 1, d: 4, dept: "Sales Engineer", office: "HCM" },
             { name: "Dang Thai Khang", m: 1, d: 5, dept: "MT Service", office: "HCM" },
             { name: "Tran Minh Hoang", m: 1, d: 18, dept: "MT Service", office: "HCM" },
@@ -323,25 +344,19 @@
         
         const calendarData = {
             holidays: {
-                "2026-01-01": "Tết Dương Lịch", 
-                "2026-02-16": "Tết Nguyên Đán", 
-                "2026-02-17": "Tết Nguyên Đán", 
-                "2026-02-18": "Tết Nguyên Đán", 
-                "2026-02-19": "Tết Nguyên Đán", 
-                "2026-02-20": "Tết Nguyên Đán", 
-                "2026-04-26": "Giỗ tổ Hùng Vương", 
-                "2026-04-27": "Nghỉ bù Giỗ tổ", 
-                "2026-04-30": "Giải phóng Miền Nam", 
-                "2026-05-01": "Quốc tế Lao động", 
-                "2026-09-01": "Quốc khánh", 
-                "2026-09-02": "Quốc khánh",
-                "2026-11-24": "Ngày văn hóa Việt Nam" // Đã bổ sung
+                "2026-01-01": "Tết Dương Lịch", "2026-02-16": "Tết Nguyên Đán", "2026-02-17": "Tết Nguyên Đán", "2026-02-18": "Tết Nguyên Đán", "2026-02-19": "Tết Nguyên Đán", "2026-02-20": "Tết Nguyên Đán", "2026-04-26": "Giỗ tổ Hùng Vương", "2026-04-27": "Nghỉ bù Giỗ tổ", "2026-04-30": "Giải phóng Miền Nam", "2026-05-01": "Quốc tế Lao động", "2026-09-01": "Quốc khánh", "2026-09-02": "Quốc khánh", "2026-11-24": "Ngày văn hóa Việt Nam" 
             },
             exhibitions: {"2026-04-15": "VIMF Hải Phòng", "2026-04-16": "VIMF Hải Phòng", "2026-04-17": "VIMF Hải Phòng", "2026-05-22": "COMPANY TRIP", "2026-05-23": "COMPANY TRIP", "2026-05-24": "COMPANY TRIP", "2026-06-17": "VIMF Bình Dương", "2026-06-18": "VIMF Bình Dương", "2026-06-19": "VIMF Bình Dương", "2026-07-01": "MTA Vietnam (HCM)", "2026-07-02": "MTA Vietnam (HCM)", "2026-07-03": "MTA Vietnam (HCM)", "2026-07-04": "MTA Vietnam (HCM)", "2026-10-13": "MTA Hanoi", "2026-10-14": "MTA Hanoi", "2026-10-15": "MTA Hanoi", "2026-11-04": "VIMF Bắc Ninh", "2026-11-05": "VIMF Bắc Ninh", "2026-11-06": "VIMF Bắc Ninh", "2026-02-06": "Year-end party (HCM)", "2026-02-13": "Year-end party (HN)"}
         };
 
         let viewDate = new Date();
         if (viewDate.getFullYear() !== 2026) viewDate = new Date(2026, 0, 1);
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 1500);
+        }
 
         function updateTime() {
             const now = new Date();
@@ -388,7 +403,6 @@
             const sidebarBdays = document.getElementById('month-birthday-list'); 
             if (sidebarBdays) sidebarBdays.innerHTML = '';
 
-            // Sidebar Sinh nhật
             if (sidebarBdays) {
                 if (currentMonthBirthdays.length > 0) {
                     currentMonthBirthdays.sort((a,b)=>a.d-b.d).forEach(b => {
@@ -452,13 +466,26 @@
         function copyElement(id) {
             const el = document.getElementById(id);
             if (!el) return;
-            const text = el.innerText;
+            copyTextDirect(el.innerText);
+        }
+
+        function copyAllCompanyInfo() {
+            const name = document.getElementById('company-name').innerText;
+            const tax = document.getElementById('tax-code').innerText;
+            const addr = document.getElementById('company-address').innerText;
+            const email = document.getElementById('company-email').innerText;
+            const fullText = `Tên Công Ty: ${name}\nMã số thuế: ${tax}\nĐịa chỉ: ${addr}\nEmail nhận hóa đơn: ${email}`;
+            copyTextDirect(fullText);
+        }
+
+        function copyTextDirect(text) {
             const dummy = document.createElement("textarea"); 
             document.body.appendChild(dummy);
             dummy.value = text; 
             dummy.select(); 
             document.execCommand("copy"); 
             document.body.removeChild(dummy);
+            showToast();
         }
 
         window.onload = function() {
