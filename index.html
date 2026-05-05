@@ -7,8 +7,9 @@
     <title>Sodick Vietnam - Sodick Vietnam Information</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Thêm phông chữ kỹ thuật số -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f1f5f9;
@@ -16,6 +17,47 @@
         .sodick-green { color: #009639; }
         .bg-sodick-green { background-color: #009639; }
         
+        /* Phong cách LED 7 đoạn */
+        .led-container {
+            background-color: #0f172a;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 10px 15px -3px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #1e293b;
+        }
+        .led-number {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 5rem;
+            color: #00ff66; /* Neon Green */
+            text-shadow: 0 0 15px rgba(0, 255, 102, 0.7), 0 0 30px rgba(0, 255, 102, 0.4);
+            letter-spacing: 0.2rem;
+            line-height: 1;
+        }
+        .led-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .led-bg-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            color: #1e293b;
+            opacity: 0.2;
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -168,6 +210,16 @@
             </div>
         </header>
 
+        <!-- Countdown Section TOP -->
+        <section class="max-w-6xl mx-auto px-4 mt-6">
+            <div class="led-container text-center">
+                <div class="led-bg-text">888</div>
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 relative z-10">Đếm ngược tới 31/12/2026</h3>
+                <div id="cd-days" class="led-number relative z-10">000</div>
+                <div class="led-label relative z-10">DAYS REMAINING</div>
+            </div>
+        </section>
+
         <main class="max-w-6xl mx-auto px-4 mt-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
@@ -292,6 +344,7 @@
 
                 <!-- Right Column -->
                 <div class="lg:col-span-2 space-y-6">
+                    <!-- Calendar Section -->
                     <section class="bg-white rounded-2xl shadow-md border-0 p-6">
                         <div class="flex items-center justify-between mb-8">
                             <h2 class="text-xl font-black flex items-center gap-2 text-slate-800 uppercase tracking-tight">
@@ -342,16 +395,13 @@
             const rememberMe = document.getElementById('remember-me').checked;
 
             if (user === 'sodick' && pass === 'sodick0000') {
-                // Hiển thị nội dung chính
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-content').classList.remove('hidden-content');
                 
-                // Nếu chọn "Ghi nhớ", lưu vào localStorage
                 if (rememberMe) {
                     localStorage.setItem('sodick_logged_in', 'true');
                 }
 
-                // Khởi tạo ứng dụng
                 initApp();
             } else {
                 error.classList.remove('hidden');
@@ -360,13 +410,34 @@
 
         function handleLogout() {
             localStorage.removeItem('sodick_logged_in');
-            location.reload(); // Tải lại trang để về màn hình đăng nhập
+            location.reload();
         }
 
         function initApp() {
             updateTime(); 
             renderCalendar(); 
+            initCountdown();
             setInterval(updateTime, 1000);
+            setInterval(updateCountdown, 1000);
+        }
+
+        // --- COUNTDOWN LOGIC ---
+        function initCountdown() {
+            updateCountdown();
+        }
+
+        function updateCountdown() {
+            const target = new Date("December 31, 2026 23:59:59").getTime();
+            const now = new Date().getTime();
+            const diff = target - now;
+
+            if (diff < 0) {
+                document.getElementById('cd-days').innerText = "000";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('cd-days').innerText = String(days).padStart(3, '0');
         }
 
         // --- DỮ LIỆU WIFI THEO QUÝ ---
@@ -463,37 +534,28 @@
             const year = viewDate.getFullYear();
             const month = viewDate.getMonth();
             const currentMonthBirthdays = birthdays.filter(b => b.m === (month + 1));
-            
             const calendarTitleEl = document.getElementById('calendar-title');
             if (calendarTitleEl) calendarTitleEl.innerText = `Tháng ${month + 1} - ${year}`;
-            
             const bdayMonthLabelEl = document.getElementById('birthday-month-label');
             if (bdayMonthLabelEl) bdayMonthLabelEl.innerText = month + 1;
-
             const m = month + 1;
             const wifiMonthLabelEl = document.getElementById('wifi-month-label');
             if (wifiMonthLabelEl) wifiMonthLabelEl.innerText = m;
-            
             const wifi = wifiSchedule[m] || wifiSchedule[1];
             document.getElementById('hn-office-pass').innerText = wifi.hn.off;
             document.getElementById('hn-meeting-pass').innerText = wifi.hn.meet;
             document.getElementById('hcm-office-pass').innerText = wifi.hcm.off;
             document.getElementById('hcm-meeting-pass').innerText = wifi.hcm.meet;
-
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
             let startDay = firstDay.getDay() - 1; if (startDay === -1) startDay = 6;
-
             const body = document.getElementById('calendar-body'); 
             if (!body) return;
             body.innerHTML = '';
-            
             const eventList = document.getElementById('event-list'); 
             if (eventList) eventList.innerHTML = '';
-            
             const sidebarBdays = document.getElementById('month-birthday-list'); 
             if (sidebarBdays) sidebarBdays.innerHTML = '';
-
             if (sidebarBdays) {
                 if (currentMonthBirthdays.length > 0) {
                     currentMonthBirthdays.sort((a,b)=>a.d-b.d).forEach(b => {
@@ -503,9 +565,7 @@
                     sidebarBdays.innerHTML = '<div class="py-10 text-center opacity-40 uppercase text-[10px] font-bold">Không có sinh nhật</div>'; 
                 }
             }
-
             for (let i = 0; i < startDay; i++) body.innerHTML += `<div class="day-cell opacity-20"></div>`;
-
             const todayStr = new Date().toISOString().split('T')[0];
             for (let d = 1; d <= lastDay.getDate(); d++) {
                 const dayOfWeek = new Date(year, month, d).getDay();
@@ -515,25 +575,20 @@
                 const birthdayPeople = currentMonthBirthdays.filter(b => b.d === d);
                 const isSM = smMeetings.includes(dateStr);
                 const isLM = leaderMeetings[dateStr];
-
                 let typeClass = 'is-weekday';
                 if (holiday || dayOfWeek === 0) typeClass = 'is-off-day';
                 else if (dayOfWeek === 6) typeClass = satWorkDays.includes(dateStr) ? 'is-weekday' : 'is-sat-off';
-
                 if (isLM) typeClass = 'is-leader-day';
                 else if (isSM) typeClass = 'is-tv-day';
                 else if (exhibition) typeClass = (exhibition === "COMPANY TRIP") ? 'is-trip' : 'is-event';
                 if (birthdayPeople.length > 0) typeClass += ' is-birthday';
-
                 let tooltip = [];
                 if (holiday) tooltip.push(holiday);
                 if (isLM) tooltip.push(isLM);
                 if (isSM) tooltip.push("Service Meeting (8:30)");
                 if (exhibition) tooltip.push(exhibition);
                 birthdayPeople.forEach(b => tooltip.push(`Sinh nhật: ${b.name}`));
-
                 body.innerHTML += `<div class="day-cell ${typeClass} ${dateStr === todayStr ? 'is-today shadow-lg':''}"><span class="text-sm">${d}</span><div class="flex gap-0.5">${isSM ? '<span class="badge-label bg-sm">SM</span>':''}${isLM ? '<span class="badge-label bg-lm">LM</span>':''}</div>${tooltip.length > 0 ? `<div class="tooltip">${tooltip.join(' + ')}</div>`:''}</div>`;
-
                 if (eventList) {
                     const addDetail = (label, color, text) => {
                         const c = color === 'purple' ? 'purple' : color;
@@ -579,7 +634,6 @@
             showToast();
         }
 
-        // --- KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP KHI TẢI TRANG ---
         window.onload = function() {
             const isLoggedIn = localStorage.getItem('sodick_logged_in');
             if (isLoggedIn === 'true') {
